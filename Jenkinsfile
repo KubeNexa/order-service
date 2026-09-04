@@ -13,9 +13,8 @@ pipeline{
         }
 
         stage('Run Unit Tests'){
-            steps {
-                sh 'go mod download'
-                sh 'go test ./...'
+            steps{
+                sh 'npm test'
             }
         }
 
@@ -60,20 +59,21 @@ pipeline{
                             echo "Directory exists, removing it..."
                             rm -rf gitops
                         fi
-                        git clone https://$GITOPS_USERNAME:$GIT_PASSWORD@github.com/KubeNexa/GitOps.git gitops
+                        git clone https://$GITOPS_USERNAME:$GITOPS_PASSWORD@github.com/KubeNexa/GitOps.git gitops
                         cd gitops/base/orderservice
 
                         git config user.email "jenkins@ci.com"
                         git config user.name "jenkins"
 
                         # Update the image tag in the kustomization.yaml file
-                        sed -i "s|image: .*order.*|image: ${IMAGE_NAME}|g" deployment.yaml
+                        sed -i "s|image: .*orderservice.*|image: ${IMAGE_NAME}|g" deployment.yaml
                        
                        git add .
                        git commit -m "Update Order Service image to ${IMAGE_NAME}"
                        git push origin main
                     '''
                     }
+                }
             }
         }
 
@@ -91,5 +91,4 @@ pipeline{
                 echo "Pipeline failed. Check the logs above."
             }
         }
-
-    }
+}  
