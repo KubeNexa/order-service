@@ -61,16 +61,16 @@ pipeline{
                             rm -rf gitops
                         fi
                         git clone https://$GITOPS_USERNAME:$GIT_PASSWORD@github.com/KubeNexa/GitOps.git gitops
-                        cd gitops/base/apigatewayservice
+                        cd gitops/base/orderservice
 
                         git config user.email "jenkins@ci.com"
                         git config user.name "jenkins"
 
                         # Update the image tag in the kustomization.yaml file
-                        sed -i "s|image: .*apigateway.*|image: ${IMAGE_NAME}|g" deployment.yaml
+                        sed -i "s|image: .*order.*|image: ${IMAGE_NAME}|g" deployment.yaml
                        
                        git add .
-                       git commit -m "Update API Gateway image to ${IMAGE_NAME}"
+                       git commit -m "Update Order Service image to ${IMAGE_NAME}"
                        git push origin main
                     '''
                     }
